@@ -1,5 +1,9 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from .models import Ad
 
 def home(request):
-    return HttpResponse("<h1>سلام! پروژه هم‌محله با موفقیت اجرا شد 🚀</h1><p>حالا می‌تونی ادامه بدی!</p>")
+    ads = Ad.objects.all().order_by('-created_at')  # جدیدترین اول
+    context = {
+        'ads': ads,
+    }
+    return render(request, 'ads/home.html', context)
