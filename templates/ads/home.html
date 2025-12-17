@@ -15,11 +15,14 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        
+        
         <div class="container">
             <a class="navbar-brand fs-3" href="/"><h1>هم‌محله</h1></a>
             <div>
                 {% if user.is_authenticated %}
                     <span class="text-white me-3">سلام {{ user.username }}!</span>
+                    <a href="{% url 'ads:create_ad' %}" class="btn btn-success me-3">+ ثبت آگهی جدید</a>
                     <a href="/accounts/logout/" class="btn btn-outline-light btn-sm">خروج</a>
                 {% else %}
                     <a href="/accounts/login/" class="btn btn-outline-light btn-sm">ورود</a>
