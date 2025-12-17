@@ -43,3 +43,13 @@ def create_ad(request):
         'categories': categories,
     }
     return render(request, 'ads/create_ad.html', context)
+
+def ad_details(request,pk):
+    ad = get_object_or_404(Ad, pk=pk)
+    images = ad.images.all() #عکس ها
+    context = {
+        'ad': ad,
+        'images': images,
+        
+    }
+    return render(request, 'ads/ad_detail',context)
