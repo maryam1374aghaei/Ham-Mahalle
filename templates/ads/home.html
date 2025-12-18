@@ -15,14 +15,12 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
-        
-        
         <div class="container">
-            <a class="navbar-brand fs-3" href="/"><h1>هم‌محله</h1></a>
+            <a class="navbar-brand fs-3" href="/">هم‌محله</a>
             <div>
                 {% if user.is_authenticated %}
-                    <span class="text-white me-3">سلام {{ user.username }}!</span>
                     <a href="{% url 'ads:create_ad' %}" class="btn btn-success me-3">+ ثبت آگهی جدید</a>
+                    <span class="text-white me-3">سلام {{ user.username }}!</span>
                     <a href="/accounts/logout/" class="btn btn-outline-light btn-sm">خروج</a>
                 {% else %}
                     <a href="/accounts/login/" class="btn btn-outline-light btn-sm">ورود</a>
@@ -33,40 +31,65 @@
     </nav>
 
     <div class="container">
+        <!-- فرم جستجو و فیلتر دسته‌بندی -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-body">
+                <form method="get" class="row g-3 align-items-end">
+                    <div class="col-md-5">
+                        <label class="form-label">جستجو</label>
+                        <input type="text" name="q" class="form-control" placeholder="جستجو در عنوان و توضیحات..."
+                               value="{{ current_search }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">دسته‌بندی</label>
+                        <select name="category" class="form-select">
+                            <option value="">همه دسته‌ها</option>
+                            {% for cat in categories %}
+                                <option value="{{ cat.id }}"
+                                        {% if current_category == cat.id|stringformat:"s" %}selected{% endif %}>
+                                    {{ cat.name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-primary w-100">اعمال فیلتر</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- لیست آگهی‌ها -->
         <div class="row">
             {% for ad in ads %}
-    <div class="col-md-4 mb-4">
-        <a href="{% url 'ads:ad_detail' ad.pk %}" class="text-decoration-none">
-            <div class="card ad-card h-100">
-                {% if ad.images.first %}
-                    <img src="{{ ad.images.first.image.url }}" class="card-img-top" style="height: 200px; object-fit: cover;">
-                {% else %}
-                    <img src="https://via.placeholder.com/400x200?text=بدون+عکس" class="card-img-top">
-                {% endif %}
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">{{ ad.title }}</h5>
-                    <p class="card-text text-muted small">
-                        {{ ad.category.name }} • {{ ad.created_at|date:"d F Y" }}
-                    </p>
-                    <p class="card-text flex-grow-1">
-                        {{ ad.description|truncatechars:100 }}
-                    </p>
-                    <div class="mt-auto">
-                        <p class="price">{{ ad.price|floatformat:0 }} تومان</p>
-                    </div>
+                <div class="col-md-4 mb-4">
+                    <a href="{% url 'ads:ad_detail' ad.pk %}" class="text-decoration-none">
+                        <div class="card ad-card h-100">
+                            {% if ad.images.first %}
+                                <img src="{{ ad.images.first.image.url }}" class="card-img-top"
+                                     style="height: 200px; object-fit: cover;">
+                            {% else %}
+                                <img src="https://via.placeholder.com/400x200?text=بدون+عکس" class="card-img-top">
+                            {% endif %}
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">{{ ad.title }}</h5>
+                                <p class="card-text text-muted small">
+                                    {{ ad.category.name }} • {{ ad.created_at|date:"d F Y" }}
+                                </p>
+                                <p class="card-text flex-grow-1">
+                                    {{ ad.description|truncatechars:100 }}
+                                </p>
+                                <div class="mt-auto">
+                                    <p class="price">{{ ad.price|floatformat:0 }} تومان</p>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
                 </div>
-            </div>
-        </a>
-    </div>
-{% empty %}
-    <div class="col-12 text-center py-5">
-        <h3>هنوز آگهی ثبت نشده!</h3>
-        <p>اولین نفر باشید و آگهی بذارید.</p>
-    </div>
-{% endfor %}
+            {% empty %}
                 <div class="col-12 text-center py-5">
-                    <h3>هنوز آگهی ثبت نشده!</h3>
-                    <p>اولین نفر باشید و آگهی بذارید.</p>
+                    <h4>آگهی یافت نشد</h4>
+                    <p>متن جستجو یا فیلتر خود را تغییر دهید.</p>
                 </div>
             {% endfor %}
         </div>
