@@ -14,7 +14,16 @@
     <nav class="navbar navbar-dark bg-primary mb-4">
         <div class="container">
             <a class="navbar-brand fs-3" href="/">هم‌محله</a>
-            <a href="/" class="btn btn-outline-light">برگشت به صفحه اصلی</a>
+            <div>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'ads:create_ad' %}" class="btn btn-success me-3">+ ثبت آگهی جدید</a>
+                    <a href="{% url 'ads:my_ads' %}" class="btn btn-light me-3">آگهی‌های من</a>
+                    <span class="text-white me-3">سلام {{ user.username }}!</span>
+                    <a href="/accounts/logout/" class="btn btn-outline-light btn-sm">خروج</a>
+                {% else %}
+                    <a href="/" class="btn btn-outline-light">برگشت به صفحه اصلی</a>
+                {% endif %}
+            </div>
         </div>
     </nav>
 
@@ -51,6 +60,13 @@
                 <p class="text-muted mb-4">تاریخ ثبت: {{ ad.created_at|date:"d F Y" }}</p>
 
                 <h4 class="text-success mb-3">{{ ad.price|floatformat:0 }} تومان</h4>
+
+                {% if user == ad.user %}
+                    <div class="mb-4">
+                        <a href="{% url 'ads:edit_ad' ad.pk %}" class="btn btn-warning me-2">ویرایش آگهی</a>
+                        <a href="{% url 'ads:delete_ad' ad.pk %}" class="btn btn-danger">حذف آگهی</a>
+                    </div>
+                {% endif %}
 
                 <div class="bg-light p-4 rounded mb-4">
                     <h5>توضیحات</h5>
