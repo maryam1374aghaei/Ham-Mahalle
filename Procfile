@@ -1,1 +1,1 @@
-web: gunicorn Ham-Mahalle.wsgi:application --log-file -
+web: gunicorn ham_mahalle.wsgi:application --log-file -
